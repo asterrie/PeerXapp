@@ -15,6 +15,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  tls: true
 });
 
 
