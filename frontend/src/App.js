@@ -77,7 +77,6 @@ function Dashboard() {
 
 // Uczniowie: wybór mentora i czatroomy
 function StudentSection() {
-  const auth = useAuth();
   const [section, setSection] = useState('mentor');
   return (
     <>
