@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { styles } from './components/styles';
 import fetchJson from './utils/fetchJson';
 

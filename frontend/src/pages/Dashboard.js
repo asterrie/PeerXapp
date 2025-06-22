@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import Tabs from './components/Tabs';
 import { styles } from './components/styles';
 import StudentSection from './StudentSection';
