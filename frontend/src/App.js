@@ -177,18 +177,30 @@ const styles = {
 // Na dole Twojego pliku App.js dodaj (albo w osobnych plikach i importuj):
 
 function Login() {
+  const auth = useAuth();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  
-  const handleSubmit = (e) => {
+  const [error, setError] = React.useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Logowanie: ${email}, hasło: ${password}`);
-    // Tutaj podłącz wywołanie API logowania i ustaw token itd.
+    setError(null);
+    try {
+      const data = await fetchJson(`${API}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      auth.login(data.token);  // ustawiamy token w kontekście
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div style={{ padding: 20 }}>
       <h2>Logowanie</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label><br />
@@ -208,16 +220,37 @@ function Register() {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(`Rejestracja: ${name}, ${email}, hasło: ${password}`);
-    // Tutaj podłącz wywołanie API rejestracji
+    setError(null);
+    setSuccess(false);
+    try {
+      const res = await fetch(`${API}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Błąd rejestracji');
+      }
+      setSuccess(true);
+      setName('');
+      setEmail('');
+      setPassword('');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
     <div style={{ padding: 20 }}>
       <h2>Rejestracja</h2>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>Rejestracja zakończona sukcesem! Możesz się teraz zalogować.</p>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Imię:</label><br />
