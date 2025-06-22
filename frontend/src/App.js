@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 const API = process.env.REACT_APP_API_URL;
 const AuthContext = createContext();
@@ -155,29 +155,6 @@ function TeacherSection() {
           })}
         </div>
       ))}
-    </div>
-  );
-}
-
-// Chat wspólny
-function ChatPage() {
-  const { token } = useAuth();
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const { userId } = {}; // pobierz z params
-  useEffect(()=>{
-    fetchJson(`${API}/messages/${userId}`,{headers:{Authorization:`Bearer ${token}`}}).then(setMessages);
-  },[userId,token]);
-  const sendMessage = async ()=>{
-    await fetchJson(`${API}/messages`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({toUserId:userId,content:input})});
-    setMessages(prev=>[...prev,{fromUserId:'me',content:input,timestamp:new Date().toISOString()}]);
-    setInput('');
-  };
-  return (
-    <div style={styles.chatWindow}>
-      <button onClick={()=>window.history.back()}>Powrót</button>
-      {messages.map((m,i)=><div key={i}>{m.content}</div>)}
-      <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&sendMessage()} />
     </div>
   );
 }
