@@ -10,12 +10,14 @@ app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 
-const JWT_SECRET = 'supersecretkeychangeplease'; // na produkcję lepiej w env
+const JWT_SECRET = process.env.JWT_SECRET;
 
-mongoose.connect('mongodb+srv://asterrie:xYCAfVjn0Ev1UigL@cluster0.9w9w2y7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  tls: true
 });
+
 
 // MODELE
 
