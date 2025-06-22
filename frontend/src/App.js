@@ -159,9 +159,6 @@ function TeacherSection() {
   );
 }
 
-function Login() {/*...*/}
-function Register() {/*...*/}
-
 const styles = {
   container:{padding:20,fontFamily:'Arial',background:'#1e1e2f',color:'#fff'},
   logout:{background:'#f55',color:'#fff',border:'none',padding:5,borderRadius:4},
