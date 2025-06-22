@@ -174,4 +174,68 @@ const styles = {
   select:{margin:5,padding:5},list:{listStyle:'none',padding:0},listItem:{margin:5},expand:{cursor:'pointer',userSelect:'none'}
 };
 
+// Na dole Twojego pliku App.js dodaj (albo w osobnych plikach i importuj):
+
+function Login() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Logowanie: ${email}, hasło: ${password}`);
+    // Tutaj podłącz wywołanie API logowania i ustaw token itd.
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Logowanie</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label><br />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+        </div>
+        <div>
+          <label>Hasło:</label><br />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+        </div>
+        <button type="submit" style={{ marginTop: 10 }}>Zaloguj się</button>
+      </form>
+    </div>
+  );
+}
+
+function Register() {
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`Rejestracja: ${name}, ${email}, hasło: ${password}`);
+    // Tutaj podłącz wywołanie API rejestracji
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Rejestracja</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Imię:</label><br />
+          <input type="text" value={name} onChange={e => setName(e.target.value)} required />
+        </div>
+        <div>
+          <label>Email:</label><br />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+        </div>
+        <div>
+          <label>Hasło:</label><br />
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+        </div>
+        <button type="submit" style={{ marginTop: 10 }}>Zarejestruj się</button>
+      </form>
+    </div>
+  );
+}
+
+
 export default App;
