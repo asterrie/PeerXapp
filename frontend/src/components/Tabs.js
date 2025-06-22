@@ -1,5 +1,5 @@
 import React from 'react';
-import { styles } from '.Styles/';
+import { styles } from './Styles'; // poprawna ścieżka, bez błędów
 
 export default function Tabs({ active, setActive }) {
   return (
