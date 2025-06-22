@@ -1,4 +1,4 @@
-export const styles = {
+export const Styles = {
   container: { padding: 20, fontFamily: 'Arial', background: '#1e1e2f', color: '#fff' },
   logout: { background: '#f55', color: '#fff', border: 'none', padding: 5, borderRadius: 4 },
   tabBar: { display: 'flex', gap: 10, marginBottom: 20 },
