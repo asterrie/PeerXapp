@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware } = require('../middleware/authMiddleware');
-const { getMessages, sendMessage } = require('../controllers/chatController');
+const chatController = require('../controllers/chatController');
 
-router.get('/:userId', authMiddleware, getMessages); // wiadomości z konkretnym userem
-router.post('/', authMiddleware, sendMessage);       // wysłanie wiadomości
+// 💬 WIADOMOŚCI PRYWATNE (uczeń ↔ uczeń)
+router.get('/private/:userId', authMiddleware, chatController.getPrivateMessages);
+router.post('/private', authMiddleware, chatController.sendPrivateMessage);
+
+// 🧑‍🏫 WIADOMOŚCI W POKOJACH (czatroomy)
+router.get('/room/:roomId', authMiddleware, chatController.getRoomMessages);
+router.post('/room', authMiddleware, chatController.sendRoomMessage);
 
 module.exports = router;
