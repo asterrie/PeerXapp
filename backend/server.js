@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
 });
 
 // Połączenie z MongoDB i start serwera
-mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URL)
   .then(() => {
     console.log('Połączono z MongoDB');
     server.listen(PORT, () => {
