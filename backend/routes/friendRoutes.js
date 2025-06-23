@@ -1,18 +1,13 @@
+// backend/routes/friendRoutes.js
 const express = require('express');
 const router = express.Router();
+const { authMiddleware } = require('../middleware/authMiddleware');
 const {
-  sendFriendRequest,
-  acceptFriendRequest,
-  rejectFriendRequest,
   getFriends,
-  getFriendRequests,
+  addFriend
 } = require('../controllers/friendController');
-const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/request/:toUserId', authMiddleware, sendFriendRequest);
-router.post('/accept/:requestId', authMiddleware, acceptFriendRequest);
-router.post('/reject/:requestId', authMiddleware, rejectFriendRequest);
 router.get('/', authMiddleware, getFriends);
-router.get('/requests', authMiddleware, getFriendRequests);
+router.post('/', authMiddleware, addFriend);
 
 module.exports = router;

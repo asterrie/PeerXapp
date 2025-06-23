@@ -1,9 +1,11 @@
 import { apiFetch } from './apiClient';
 
-export function getMessagesWithUser(token, userId) {
+// Pobierz wiadomości prywatne z użytkownikiem o userId
+export async function getPrivateMessages(token, userId) {
   return apiFetch(`/chats/${userId}`, 'GET', token);
 }
 
-export function sendMessage(token, toUserId, content) {
-  return apiFetch('/chats', 'POST', token, { toUserId, content });
+// Wyślij wiadomość prywatną do użytkownika o userId
+export async function sendPrivateMessage(token, userId, content) {
+  return apiFetch(`/chats/${userId}`, 'POST', token, { content });
 }

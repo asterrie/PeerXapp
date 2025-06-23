@@ -1,17 +1,13 @@
+
 const mongoose = require('mongoose');
 
-const UserSchema = new mongoose.Schema({
-  email: { type: String, unique: true, required: true },
-  passwordHash: { type: String, required: true },
+const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  passwordHash: { type: String, required: true },
   role: { type: String, enum: ['student', 'teacher'], required: true },
-  tokens: { type: Number, default: 0 },
-  subjectsBasic: [String],
-  subjectsExtended: [String],
-  subjectsVocational: [String],
+  subjectsExtended: [{ type: String, required: function () { return this.role === 'student'; } }],
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  friendRequestsSent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  friendRequestsReceived: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);

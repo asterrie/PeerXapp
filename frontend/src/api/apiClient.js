@@ -1,32 +1,19 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api';
+// src/api/apiClient.js
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export async function apiFetch(endpoint, method = 'GET', token = null, body = null) {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+  const config = { method, headers };
+  if (body) config.body = JSON.stringify(body);
 
-  const options = {
-    method,
-    headers,
-  };
-
-  if (body) {
-    options.body = JSON.stringify(body);
-  }
-
-  const res = await fetch(`${API_URL}${endpoint}`, options);
+  const res = await fetch(`${API_URL}${endpoint}`, config);
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}));
-    const errorMessage = errorData.error || res.statusText || 'Błąd sieci';
-    throw new Error(errorMessage);
+    throw new Error(errorData.error || 'Błąd żadania');
   }
 
-  if (res.status === 204) return null; // brak treści
-
-  return res.json();
+  return res.status === 204 ? null : res.json();
 }

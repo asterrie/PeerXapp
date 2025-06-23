@@ -1,9 +1,10 @@
+// src/api/auth.js
 import { apiFetch } from './apiClient';
 
-export function login(credentials) {
-  return apiFetch('/auth/login', 'POST', null, credentials);
+export async function registerUser(form) {
+  return await apiFetch('/auth/register', 'POST', null, form);
 }
 
-export function register(data) {
-  return apiFetch('/auth/register', 'POST', null, data);
+export async function loginUser(credentials) {
+  return await apiFetch('/auth/login', 'POST', null, credentials);
 }

@@ -1,72 +1,114 @@
+// frontend/pages/Register.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from '../api/apiClient';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { apiFetch } from '../api/apiClient';
+
+const SUBJECTS = [
+    'Matematyka',
+    'Fizyka',
+    'Chemia',
+    'Informatyka',
+    'Biologia',
+    'Historia',
+    'Język polski',
+    'Język angielski',
+    'Wiedza o społeczeństwie',
+    'Język Niemiecki', 
+    'Język hiszpański', 
+    'Geografia'
+];
 
 export default function Register() {
-  const navigate = useNavigate();
+  const { setUser, setToken } = useAuth();
   const [form, setForm] = useState({
-    username: '', email: '', password: '', role: 'student', subjects: []
+    name: '',
+    email: '',
+    password: '',
+    role: 'student',
+    subjectsExtended: []
   });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    await axios.post('/auth/register', form);
-    navigate('/login');
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setForm((prev) => {
+        const updated = checked
+          ? [...prev.subjectsExtended, value]
+          : prev.subjectsExtended.filter((s) => s !== value);
+        return { ...prev, subjectsExtended: updated };
+      });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
 
-  const subjectOptions = ['Matematyka', 'Biologia', 'Geografia', 'Zawodowe IT', 'Język Polski'];
-
-  const toggleSubject = subject => {
-    setForm(prev => ({
-      ...prev,
-      subjects: prev.subjects.includes(subject)
-        ? prev.subjects.filter(s => s !== subject)
-        : [...prev.subjects, subject]
-    }));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const data = await apiFetch('/auth/register', 'POST', null, form);
+      setToken(data.token);
+      setUser(data.user);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div style={{ maxWidth: 500, margin: '0 auto' }}>
       <h2>Rejestracja</h2>
-      <input
-        placeholder="Nazwa użytkownika"
-        value={form.username}
-        onChange={e => setForm({ ...form, username: e.target.value })}
-      />
-      <input
-        placeholder="Email"
-        value={form.email}
-        onChange={e => setForm({ ...form, email: e.target.value })}
-      />
-      <input
-        type="password"
-        placeholder="Hasło"
-        value={form.password}
-        onChange={e => setForm({ ...form, password: e.target.value })}
-      />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Imię i nazwisko"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Hasło"
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
 
-      <select onChange={e => setForm({ ...form, role: e.target.value })}>
-        <option value="student">Uczeń</option>
-        <option value="teacher">Nauczyciel</option>
-      </select>
-
-      {form.role === 'student' && (
-        <div>
-          <p>Wybierz przedmioty, w których chcesz być mentorem:</p>
-          {subjectOptions.map(subject => (
-            <label key={subject}>
+        <fieldset>
+          <legend>Przedmioty rozszerzone</legend>
+          {SUBJECTS.map((subject) => (
+            <label key={subject} style={{ display: 'block' }}>
               <input
                 type="checkbox"
-                checked={form.subjects.includes(subject)}
-                onChange={() => toggleSubject(subject)}
+                name="subjectsExtended"
+                value={subject}
+                checked={form.subjectsExtended.includes(subject)}
+                onChange={handleChange}
               />
               {subject}
             </label>
           ))}
-        </div>
-      )}
+        </fieldset>
 
-      <button type="submit">Zarejestruj</button>
-    </form>
+        <button type="submit">Zarejestruj się</button>
+      </form>
+      <p>
+        Masz już konto? <Link to="/login">Zaloguj się</Link>
+      </p>
+    </div>
   );
 }

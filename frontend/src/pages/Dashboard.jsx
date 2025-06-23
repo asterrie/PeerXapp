@@ -1,4 +1,5 @@
-import React from 'react';
+// frontend/pages/Dashboard.jsx
+import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,15 +7,10 @@ export default function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  return (
-    <div>
-      <h1>Witaj, {user.username}!</h1>
-      <p>Twoja rola: {user.role}</p>
-      {user.role === 'student' ? (
-        <button onClick={() => navigate('/student')}>Przejdź do Panelu Ucznia</button>
-      ) : (
-        <button onClick={() => navigate('/teacher')}>Przejdź do Panelu Nauczyciela</button>
-      )}
-    </div>
-  );
+  useEffect(() => {
+    if (user?.role === 'student') navigate('/student-panel');
+    // if (user?.role === 'teacher') navigate('/teacher-panel'); // opcjonalnie później
+  }, [user, navigate]);
+
+  return <p>Witaj, trwa przekierowywanie...</p>;
 }

@@ -1,13 +1,8 @@
-import React from 'react';
+import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';  // zakładam, że masz taki context
 
 export default function RequireAuth({ children }) {
-  const { token } = useAuth();
-
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  const { token, loading } = useAuth();
+  if (loading) return <p>Sprawdzanie autoryzacji...</p>;
+  return token ? children : <Navigate to="/login" />;
 }

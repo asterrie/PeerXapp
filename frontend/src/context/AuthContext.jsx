@@ -1,48 +1,47 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+// src/context/AuthContext.jsx
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// Tworzymy kontekst
 const AuthContext = createContext();
 
-// Hook do wygodnego korzystania z kontekstu
-export const useAuth = () => useContext(AuthContext);
-
-// Provider - opakowuje całą aplikację i dostarcza dane auth
 export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null); // np. obiekt user z backendu
+  const [loading, setLoading] = useState(true);
 
-  // Przy starcie sprawdzamy czy token jest w localStorage
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
-    if (savedToken) {
-      setToken(savedToken);
-      setUser(savedUser ? JSON.parse(savedUser) : null);
+    const storedUser = localStorage.getItem('user');
+    const storedToken = localStorage.getItem('token');
+
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
     }
+
+    setLoading(false);
   }, []);
 
-  // Funkcja do logowania - zapisujemy token i usera
-  const login = (token, userData) => {
-    setToken(token);
-    setUser(userData);
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
+  useEffect(() => {
+    if (user && token) {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+    }
+  }, [user, token]);
 
-  // Funkcja do wylogowania
   const logout = () => {
-    setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    setToken(null);
   };
-
-  // Czy jesteśmy zalogowani?
-  const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, token, setUser, setToken, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }

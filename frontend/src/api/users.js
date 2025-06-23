@@ -1,13 +1,6 @@
 import { apiFetch } from './apiClient';
 
-export function getUserProfile(token) {
-  return apiFetch('/users/profile', 'GET', token);
-}
-
-export function getUsers(token) {
-  return apiFetch('/users', 'GET', token);
-}
-
-export function addFriend(token, friendId) {
-  return apiFetch(`/users/friends/${friendId}`, 'POST', token);
+// Pobierz dane aktualnie zalogowanego użytkownika
+export async function getCurrentUser(token) {
+  return apiFetch('/users/me', 'GET', token);
 }
